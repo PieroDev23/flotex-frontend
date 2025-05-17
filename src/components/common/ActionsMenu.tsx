@@ -1,6 +1,6 @@
 import { Box, CloseButton, Drawer, Flex, Heading, HStack, IconButton, Image, NumberInput, Separator, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { LuCircleAlert, LuCreditCard, LuMinus, LuPlus, LuShoppingCart, LuTrash2 } from "react-icons/lu";
+import { LuCircleAlert, LuCreditCard, LuMinus, LuPlus, LuShoppingCart, LuTrash2, LuUser } from "react-icons/lu";
 import { Link } from "react-router";
 import { useShop } from "../../context/ShopContext";
 
@@ -141,9 +141,11 @@ export const ActionsMenu: React.FC = () => {
       {/* <IconButton bg="transparent" color="black" >
         <LuHeart />
       </IconButton> */}
-      {/* <IconButton bg="transparent" color="black">
-        <LuUser />
-      </IconButton> */}
+      <Link to="/login">
+        <IconButton bg="transparent">
+          <LuUser />
+        </IconButton>
+      </Link>
       <CartWidget />
     </Flex>
   )
