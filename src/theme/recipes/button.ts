@@ -10,7 +10,7 @@ export default defineRecipe({
     justifyContent: "center",
     userSelect: "none",
     position: "relative",
-    borderRadius: "l2",
+    borderRadius: "none",
     whiteSpace: "nowrap",
     verticalAlign: "middle",
     borderWidth: "1px",

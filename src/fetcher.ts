@@ -37,44 +37,7 @@ export const sendDataFactory = (method: "POST" | "PUT") =>
     })(url)
   }
 
-
 export const getFetcher = fetcherFactory();
 export const deleteFetcher = fetcherFactory({ method: "DELETE" });
 export const postFetcher = sendDataFactory("POST");
 export const putFetcher = sendDataFactory("PUT");
-
-
-
-
-type GetFetcherFn = (url: string) => Promise<any>;
-type PostFetcherFn = (url: string, arg: { arg: string }) => Promise<any>;
-
-
-
-
-// type FetcherFactory = (init: RequestInit) =>
-//   typeof init['method'] extends undefined ? GetFetcherFn :
-//   typeof init['method'] extends "DELETE" ? GetFetcherFn : PostFetcherFn;
-
-
-// export const newFetchFactory = (init) => {
-//   const fetchFn = async (url: string, options: RequestInit = {}) => {
-//     const response = await fetch(`/api/${url}`, options);
-//     if (!response.ok) {
-//       const { code, message } = await response.json();
-//       throw new FetchError(response.status, { code, message });
-//     }
-//     return await response.json();
-//   }
-
-
-//   if (["POST", "PUT"].includes(init.method || "")) {
-//     return (url: string, { arg }: { arg: Record<string, unknown> }) => {
-//       return fetchFn(url, { ...init, body: JSON.stringify(arg) });
-//     }
-//   }
-
-//   return (url: string) => fetchFn(url);
-// }
-
-// const newgetFetcher = newFetchFactory()
