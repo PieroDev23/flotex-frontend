@@ -1,6 +1,6 @@
-import { Box, CloseButton, Drawer, Flex, Heading, IconButton, Image, Separator, Stack, Text } from "@chakra-ui/react";
+import { Box, CloseButton, Drawer, Flex, Heading, HStack, IconButton, Image, NumberInput, Separator, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { LuCircleAlert, LuCreditCard, LuShoppingCart, LuTrash2 } from "react-icons/lu";
+import { LuCircleAlert, LuCreditCard, LuMinus, LuPlus, LuShoppingCart, LuTrash2 } from "react-icons/lu";
 import { Link } from "react-router";
 import { useShop } from "../../context/ShopContext";
 
@@ -10,6 +10,7 @@ export const CartWidget = () => {
     open,
     onDeleteCart,
     onDumpCart,
+    onUpdateQuantity,
     setOpen } = useShop();
 
   const avalableItems = cart.products.length > 0
@@ -65,15 +66,36 @@ export const CartWidget = () => {
                             <Heading size="sm" lineClamp={1}>{item.name}</Heading>
                             <Text fontSize={13}> S/. {(item.price * item.quantity).toFixed(2)} (x{item.quantity})</Text>
                           </Stack>
-                          <Text
-                            fontSize={13}
-                            w="fit"
-                            _hover={{ cursor: "pointer" }}
-                            textDecor="underline"
-                            onClick={() => onDeleteCart(item)}
-                          >
-                            Eliminar
-                          </Text>
+                          <Flex align="center" gap={5}>
+                            <Text
+                              fontSize={13}
+                              w="fit"
+                              _hover={{ cursor: "pointer" }}
+                              textDecor="underline"
+                              onClick={() => onDeleteCart(item)}
+                            >
+                              Eliminar
+                            </Text>
+                            <NumberInput.Root size="xs" value={item.quantity.toString()}
+                              unstyled
+                              spinOnPress={false}
+                              min={1}
+                              onValueChange={(e) => onUpdateQuantity({ ...item, quantity: e.valueAsNumber })}>
+                              <HStack gap="2">
+                                <NumberInput.DecrementTrigger asChild>
+                                  <IconButton variant="outline" size="xs" borderRadius="unset">
+                                    <LuMinus />
+                                  </IconButton>
+                                </NumberInput.DecrementTrigger>
+                                <NumberInput.ValueText textAlign="center" fontSize="lg" minW="3ch" />
+                                <NumberInput.IncrementTrigger asChild>
+                                  <IconButton variant="outline" size="xs" borderRadius="unset">
+                                    <LuPlus />
+                                  </IconButton>
+                                </NumberInput.IncrementTrigger>
+                              </HStack>
+                            </NumberInput.Root>
+                          </Flex>
                         </Stack>
                       </Flex>
                     </Stack>
@@ -99,6 +121,9 @@ export const CartWidget = () => {
                 <LuTrash2 />
                 Vaciar carrito
               </IconButton>
+              <Link to="/cart" style={{ display: "block", textAlign: "center", textDecoration: "underline" }} onClick={() => setOpen(false)}>
+                inspeccionar carrito
+              </Link>
             </Stack>
           </Drawer.Footer>
           <Drawer.CloseTrigger asChild>

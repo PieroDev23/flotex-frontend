@@ -8,6 +8,7 @@ import Checkout from './pages/Checkout';
 import OrderReview from './pages/OrderReview';
 import Faq from './pages/Faq';
 import PrivacyPolicies from './pages/PrivacyPolicies';
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/order/:id" element={<OrderReview />} />
         <Route path="/privacy" element={<PrivacyPolicies />} />
         <Route path="/faq" element={<Faq />} />
+        <Route path="/cart" element={<Cart />} />
       </Route>
     </Routes>
   )

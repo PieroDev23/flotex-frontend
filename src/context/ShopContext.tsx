@@ -15,6 +15,7 @@ type ShopContextValues = {
   onAddCart: (product: Item) => void;
   onDeleteCart: (product: Item) => void;
   onDumpCart: () => void;
+  onUpdateQuantity: (product: Item) => void;
   open: boolean,
   setOpen: (open: boolean) => void;
   cart: {
@@ -61,6 +62,21 @@ const ShopProvider = ({ children }: PropsWithChildren) => {
     });
   }
 
+  const onUpdateQuantity = (item: Item) => {
+    const products = cart.products.map(product => {
+      if (product.id === item.id) {
+        return {
+          ...item
+        }
+      }
+      return product;
+    });
+    setCart({
+      ...cart,
+      products,
+    })
+  }
+
   const onDeleteCart = (item: Item) =>
     setCart({
       ...cart,
@@ -91,6 +107,7 @@ const ShopProvider = ({ children }: PropsWithChildren) => {
       setOpen,
       onAddCart,
       onDumpCart,
+      onUpdateQuantity,
       onDeleteCart
     }}>
       {children}
