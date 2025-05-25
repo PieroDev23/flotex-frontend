@@ -27,7 +27,7 @@ export const QualityAssurance = () => {
   return (
     <Box minH={300} >
       <Separator />
-      <Container display="flex" gap={8} flexDir={{ base: "column", lg: "row" }} alignItems="center" minH="100%" justifyContent="space-between">
+      <Container display="flex" gap={8} flexDir={{ base: "column", lg: "row" }} alignItems="center" minH="100%" justifyContent="space-betweena" py="5">
         <FeatureItem
           title="Alta calidad"
           description="Hecho con los mejores materiales."

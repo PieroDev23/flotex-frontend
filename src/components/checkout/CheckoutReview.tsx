@@ -1,18 +1,15 @@
 import { Button, Flex, Heading, Separator, Stack, Text } from "@chakra-ui/react";
-import { useShop } from "../../context/ShopContext";
-import { LuDollarSign } from "react-icons/lu";
 import React from "react";
 import { Link } from "react-router";
+import { useCheckout } from "../../context/CheckoutContext";
+import { useShop } from "../../context/ShopContext";
 
 
 
 
-
-
-
-
-export const CheckoutReview: React.FC<{ step: number, isLoading: boolean }> = ({ step, isLoading }) => {
+export const CheckoutReview: React.FC = () => {
   const { cart } = useShop();
+  const { step, isMutating } = useCheckout();
   return (
     <Stack gap={13} p={21} maxH="fit">
       <Heading size="2xl">Detalle de la orden</Heading>
@@ -37,22 +34,22 @@ export const CheckoutReview: React.FC<{ step: number, isLoading: boolean }> = ({
           <Heading size="sm">Subtotal</Heading>
           <Heading size="sm">S/. {cart.total.toFixed(2)} </Heading>
         </Flex>
-
         <Flex justify="space-between" align="center">
           <Heading size="md">Total</Heading>
           <Heading size="xl">S/. {cart.total.toFixed(2)}</Heading>
         </Flex>
         <Button
-          loading={isLoading}
+          bgColor="brand.primary"
+          color="white"
+          loading={isMutating}
           type="submit"
           borderRadius="unset"
           w="full"
           m="auto">
-          <LuDollarSign />
-          {step === 0 ? "Ingresar método de pago" : "Realizar orden"}
+          {step === 0 ? "Escoger método de entrega" : "Realizar orden"}
         </Button>
         <Text fontSize={13} color="fg.muted">
-          Sus datos personales se utilizarán para respaldar su experiencia en este sitio web, para administrar el acceso a su cuenta y para otros fines descritos en nuestra <Link style={{ fontWeight: "bolder", textDecoration: "underline" }} to="/privacy"> política de privacidad. </Link>
+          Sus datos personales se utilizarán para respaldar su experiencia en este sitio web, para administrar el acceso a su cuenta y para otros fines descritos en nuestra <Link style={{ fontWeight: "bolder", textDecoration: "underline" }} to="/privacy"> política de privacidad.</Link>
         </Text>
       </Stack>
     </Stack>

@@ -1,6 +1,5 @@
 import { Flex, Heading, Input, Stack } from "@chakra-ui/react"
-import { FormState, UseFormRegister } from "react-hook-form"
-import { FormValues } from "../../pages/Checkout"
+import { useCheckout } from "../../context/CheckoutContext"
 import { Field } from "../common/Field"
 import { Select } from "../common/Select"
 
@@ -31,10 +30,8 @@ const makeYears = () => {
   return years;
 }
 
-export const PaymentMethodStep = ({ register, formState }: {
-  register: UseFormRegister<FormValues>,
-  formState: FormState<FormValues>
-}) => {
+export const PaymentMethodStep = () => {
+  const { register, formState } = useCheckout();
   return (
     <Stack gap={21}>
       <Heading size="2xl">Datos de pago</Heading>

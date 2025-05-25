@@ -11,6 +11,7 @@ import PrivacyPolicies from './pages/PrivacyPolicies';
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { CheckoutProvider } from './context/CheckoutContext';
 
 function App() {
   return (
@@ -19,7 +20,11 @@ function App() {
         <Route index element={<Home />} />
         <Route path="shop" element={<Shop />} />
         <Route path="/shop/:id" element={<SingleProduct />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={
+          <CheckoutProvider>
+            <Checkout />
+          </CheckoutProvider>
+        } />
         <Route path="/order/:id" element={<OrderReview />} />
         <Route path="/privacy" element={<PrivacyPolicies />} />
         <Route path="/faq" element={<Faq />} />

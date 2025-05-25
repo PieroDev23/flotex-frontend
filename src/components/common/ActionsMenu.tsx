@@ -51,7 +51,7 @@ export const CartWidget = () => {
               <Text> El carrito está vacío.</Text> : (
                 <Stack gap={13}>
                   {cart.products.map((item) => (
-                    <Stack key={item.id} pb={2} borderBottom="1px solid gray">
+                    <Stack key={item.id} pb={2} borderBottom="1px solid gray/50">
                       <Flex gap={13} align="flex-start" flexDir="row-reverse">
                         <Box w={70} h={70} flexShrink={0}>
                           <Image
@@ -138,9 +138,6 @@ export const CartWidget = () => {
 export const ActionsMenu: React.FC = () => {
   return (
     <Flex align="center">
-      {/* <IconButton bg="transparent" color="black" >
-        <LuHeart />
-      </IconButton> */}
       <Link to="/login">
         <IconButton bg="transparent">
           <LuUser />
