@@ -1,7 +1,7 @@
 import { Flex, Heading, Input, Stack } from "@chakra-ui/react"
-import { useCheckout } from "../../context/CheckoutContext"
 import { Field } from "../common/Field"
 import { Select } from "../common/Select"
+import { useCheckout } from "../../context/CheckoutContext"
 
 
 
@@ -37,7 +37,7 @@ export const PaymentMethodStep = () => {
       <Heading size="2xl">Datos de pago</Heading>
       <Stack gap={21}>
         <Field label="Número de tarjeta" required>
-          <Input {...register("cardNumber", { maxLength: 16 })} maxLength={16} />
+          <Input maxLength={16} />
         </Field>
         <Flex align="center" gap={5} flexWrap={{ base: "wrap", md: "nowrap" }}>
           <Flex align="center" gap={2} flexBasis={{ base: "full", md: "90%" }}>

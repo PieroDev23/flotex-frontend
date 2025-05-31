@@ -14,6 +14,7 @@ export const Select:
     return (
       <NativeSelect.Root>
         <NativeSelect.Field onChange={onChange}>
+          <option value="">Escoge una opción</option>
           {options.map(o => (
             <option key={o.value} value={o.value}>{o.label}</option>
           ))}

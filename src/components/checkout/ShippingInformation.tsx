@@ -1,16 +1,45 @@
-import { Flex, Input, Stack, Textarea } from "@chakra-ui/react"
+import { Checkbox, Flex, Input, Stack, Text, Textarea } from "@chakra-ui/react"
 import { useCheckout } from "../../context/CheckoutContext"
 import { Field } from "../common/Field"
 import { Select } from "../common/Select"
+import React from "react"
+import { useAuth } from "../../context/AuthContext"
+import { useAddress } from "../../hooks/api"
 
 
 
 
 export const ShippingInformation = () => {
-  const { formState, register } = useCheckout();
+  const [checked, setChecked] = React.useState(false);
+  const { formState, register, setValue } = useCheckout();
+  const { user } = useAuth();
+  // const { data: addresses } = useGetAddress(checked);
+  const { getAddresses } = useAddress();
+  const { data: addresses } = getAddresses(checked && !!user);
   return (
     <Stack gap={21} p={21}>
-      <Stack gap={21}>
+      {user && (
+        <Checkbox.Root checked={checked} onCheckedChange={e => setChecked(Boolean(e.checked))}>
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+          <Checkbox.Label>Quiero escoger una dirección predeterminada</Checkbox.Label>
+        </Checkbox.Root>)}
+      {addresses ? (
+        <Field
+          label="Selecciona tu dirección"
+          required
+        >
+          <Select
+            options={
+              addresses.map(({ address, id }: Record<string, unknown>) => ({
+                label: address,
+                value: id
+              }))
+            }
+            onChange={(e) => setValue("addressId", e.target.value)}
+          />
+        </Field>) : <Text hidden={!checked}>No tienes ninguna dirección guardada.</Text>}
+      <Stack gap={21} hidden={checked}>
         <Flex gap={5}>
           <Field label="País" required disabled>
             <Select
@@ -27,7 +56,7 @@ export const ShippingInformation = () => {
         </Flex>
         <Field
           label="Diección"
-          required
+          required={!checked}
           invalid={!!formState.errors.address}
           errorText={formState.errors.address?.message}
           helperText="Mínimo 10 caracteres">
@@ -36,14 +65,14 @@ export const ShippingInformation = () => {
         <Field
           label="Referencia"
           helperText="La referencia nos ayudará a encontrarte más rápido">
-          <Input {...register("reference")} />
+          <Input {...register("reference")} disabled={checked} />
         </Field>
         <Field
           label="Información adicional"
           helperText="Detalla cualquier información relevante acerca de tu pedido">
-          <Textarea rows={8} resize="none" {...register("detail")} />
+          <Textarea rows={8} resize="none" {...register("detail")} disabled={checked} />
         </Field>
       </Stack>
-    </Stack>
+    </Stack >
   )
 }

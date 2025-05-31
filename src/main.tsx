@@ -1,9 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router'
+import { SWRConfig } from 'swr'
 import App from './App.tsx'
 import { Provider } from './chakra/components/ui/provider.tsx'
-import { SWRConfig } from 'swr'
+import { Toaster } from './chakra/components/ui/toaster.tsx'
+import { AuthProvider } from './context/AuthContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -17,9 +19,12 @@ createRoot(document.getElementById('root')!).render(
       }}>
       <StrictMode>
         <Provider>
-          <Routes>
-            <Route path='*' element={<App />} />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path='*' element={<App />} />
+            </Routes>
+            <Toaster />
+          </AuthProvider>
         </Provider>
       </StrictMode>
     </SWRConfig>

@@ -50,7 +50,7 @@ export const CategoriesGridSkeleton = () => {
         <Stack flexBasis={{ base: 380, lg: "full" }} key={idx} position="relative">
           <Box w="100%">
             <Image
-              src="https://fakeimg.pl/640x940/"
+              src="https://fakeimg.ryd.tools/640x940/"
               objectFit="cover"
               display="block"
               w="100%"

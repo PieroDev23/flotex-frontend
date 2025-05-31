@@ -24,10 +24,10 @@ export default () => {
         <Heading size="2xl">¡Gracias por tu compra! - Total: <Span>S/.{Number(order?.totalAmount).toFixed(2)}</Span></Heading>
         <Stack as="ul" gap={3}>
           <li>Estado: <Badge colorPalette={statusBadge[order?.status || "CANCELED"].color}>{statusBadge[order?.status || "CANCELED"].name}</Badge></li>
-          <li>Nombre: {order?.guestFirstname} {order?.guestLastname}</li>
-          <li>Email: {order?.guestEmail}</li>
-          <li>Dirección: {order?.guestAddress}</li>
-          <li>Teléfono: {order?.guestPhone}</li>
+          <li>Nombre: {order?.firstname} {order?.lastname}</li>
+          <li>Email: {order?.email}</li>
+          <li>Dirección: {order?.address}</li>
+          <li>Teléfono: {order?.phone}</li>
         </Stack>
       </Stack>
       <Stack w="full" gap={13} mt={13}>

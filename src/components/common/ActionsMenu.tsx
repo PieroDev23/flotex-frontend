@@ -1,7 +1,8 @@
-import { Box, CloseButton, Drawer, Flex, Heading, HStack, IconButton, Image, NumberInput, Separator, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, CloseButton, Drawer, Flex, Heading, HStack, IconButton, Image, NumberInput, Separator, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { LuCircleAlert, LuCreditCard, LuMinus, LuPlus, LuShoppingCart, LuTrash2, LuUser } from "react-icons/lu";
+import { LuCircleAlert, LuCreditCard, LuLogOut, LuMinus, LuPlus, LuShoppingCart, LuTrash2, LuUser } from "react-icons/lu";
 import { Link } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 import { useShop } from "../../context/ShopContext";
 
 export const CartWidget = () => {
@@ -136,14 +137,27 @@ export const CartWidget = () => {
 }
 
 export const ActionsMenu: React.FC = () => {
+  const { onLogout, user } = useAuth();
+
   return (
-    <Flex align="center">
+    <Flex align="center" gap="1.5">
       <Link to="/login">
         <IconButton bg="transparent">
           <LuUser />
         </IconButton>
       </Link>
+
       <CartWidget />
+      {user && (
+        <Button
+          bg="transparent"
+          gap="1"
+          onClick={onLogout}
+        >
+          <LuLogOut />
+          Salir
+        </Button>
+      )}
     </Flex>
   )
 }

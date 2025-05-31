@@ -16,7 +16,13 @@ const fetcherFactory = (
   init: RequestInit = {}
 ) => {
   return async (url: string) => {
-    const response = await fetch(`/api/${url}`, init);
+    const response = await fetch(`/api/${url}`, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        "credentials": "includes"
+      }
+    });
     if (!response.ok) {
       const { code, message } = await response.json();
       throw new FetchError(response.status, { code, message });
@@ -25,8 +31,8 @@ const fetcherFactory = (
   }
 }
 
-export const sendDataFactory = (method: "POST" | "PUT") =>
-  (url: string, { arg }: { arg: Record<string, unknown> }) => {
+export const sendDataFactory = (method: "POST" | "PUT" | "DELETE") =>
+  (url: string, { arg }: { arg?: Record<string, unknown> }) => {
     return fetcherFactory({
       method,
       headers: {
@@ -38,6 +44,6 @@ export const sendDataFactory = (method: "POST" | "PUT") =>
   }
 
 export const getFetcher = fetcherFactory();
-export const deleteFetcher = fetcherFactory({ method: "DELETE" });
+export const deleteFetcher = sendDataFactory("DELETE");
 export const postFetcher = sendDataFactory("POST");
 export const putFetcher = sendDataFactory("PUT");

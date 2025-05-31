@@ -109,7 +109,7 @@ export const ProductsGridSkeleton = () => {
           <Stack position="relative">
             <Box w="full">
               <Image
-                src="https://fakeimg.pl/800x800/?text="
+                src="https://fakeimg.ryd.tools/800x800/"
                 objectFit="cover"
                 display="block"
                 w="100%"

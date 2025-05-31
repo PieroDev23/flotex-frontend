@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import { getFetcher, postFetcher } from "../../fetcher";
+import { deleteFetcher, getFetcher, postFetcher } from "../../fetcher";
 
 export function buildQueryParams(params: Record<string, unknown>): string {
   const queryParams = new URLSearchParams();
@@ -20,7 +20,9 @@ export function buildQueryParams(params: Record<string, unknown>): string {
 }
 
 
-export const useProducts = (params: { categoryId?: string | null } = {}, isReady: boolean = true) => {
+export const useProducts = (params: { 
+  categoryId?: string | null
+} = {}, isReady: boolean = true) => {
   return useSWR(isReady ? `products/list?${buildQueryParams(params)}` : null, getFetcher);
 }
 
@@ -38,3 +40,27 @@ export const useOrders = () => {
     createOrder: () => useSWRMutation("orders", postFetcher)
   }
 }
+
+export const useLogin = () => {
+  return useSWRMutation("auth/login", postFetcher);
+}
+
+export const useRegister = () => {
+  return useSWRMutation("auth/register", postFetcher)
+}
+
+export const useUser = () => {
+  return useSWR(`users/`, getFetcher);
+}
+
+export const useLogout = () => {
+  return useSWRMutation("auth/logout", deleteFetcher);
+}
+
+export const useAddress = () => {
+  return {
+    createAddress: () => useSWRMutation("addresses/", postFetcher),
+    getAddresses: (isReady: boolean) => useSWR(isReady ? "addresses/list" : null, getFetcher)
+  }
+}
+
