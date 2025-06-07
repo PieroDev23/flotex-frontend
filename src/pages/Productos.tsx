@@ -7,7 +7,7 @@ import {
   InputGroup,
   Stack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LuSearch } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import { ProductsTable } from "../components/products/ProductsTable";
@@ -23,9 +23,14 @@ export default () => {
   });
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const { data: products, isLoading } = useProductsList(searchParams);
+  const { data: products, isLoading, mutate: mutateProducts } = useProductsList(searchParams);
   const { data: categories } = useCategories();
   const navigate = useNavigate();
+
+  // Force revalidation when component mounts to ensure fresh data
+  useEffect(() => {
+    mutateProducts();
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleProductClick = (product: Product) => {
     navigate(`/dashboard/productos/editar/${product.id}`);

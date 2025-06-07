@@ -31,6 +31,8 @@ interface ProductFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
   isLoading?: boolean;
   submitButtonText?: string;
+  onDelete?: () => Promise<void>;
+  isDeleting?: boolean;
 }
 
 export const ProductForm: React.FC<ProductFormProps> = ({
@@ -38,7 +40,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   categories,
   onSubmit,
   isLoading = false,
-  submitButtonText = "Guardar Producto"
+  submitButtonText = "Guardar Producto",
+  onDelete,
+  isDeleting = false
 }) => {
   const {
     register,
@@ -374,23 +378,40 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
               {/* Submit Section */}
               <Box pt={6} borderTop="1px solid" borderColor="gray.200">
-                <Flex justify="flex-end" gap={3}>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => window.history.back()}
-                    disabled={isLoading}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    type="submit"
-                    colorScheme="blue"
-                    loading={isLoading}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Guardando..." : submitButtonText}
-                  </Button>
+                <Flex justify="space-between" align="center">
+                  {/* Delete button - only show in edit mode */}
+                  {onDelete && product && (
+                    <Button
+                      type="button"
+                      colorScheme="red"
+                      variant="outline"
+                      onClick={onDelete}
+                      loading={isDeleting}
+                      disabled={isLoading || isDeleting}
+                    >
+                      {isDeleting ? "Eliminando..." : "Eliminar Producto"}
+                    </Button>
+                  )}
+
+                  {/* Right side buttons */}
+                  <Flex gap={3} ml="auto">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => window.history.back()}
+                      disabled={isLoading || isDeleting}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="submit"
+                      colorScheme="blue"
+                      loading={isLoading}
+                      disabled={isLoading || isDeleting}
+                    >
+                      {isLoading ? "Guardando..." : submitButtonText}
+                    </Button>
+                  </Flex>
                 </Flex>
               </Box>
             </VStack>

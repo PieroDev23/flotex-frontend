@@ -1,9 +1,8 @@
 import { Box, Heading, Stack, Button, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 import { useState } from "react";
-import { mutate } from "swr";
 import { ProductForm } from "../components/products/ProductForm";
-import { useCategories, useCreateProduct } from "../hooks/api";
+import { useCategories, useCreateProduct, invalidateProductsCache } from "../hooks/api";
 
 export default () => {
   const navigate = useNavigate();
@@ -39,8 +38,8 @@ export default () => {
       await createProductMutation.trigger(data);
       setSubmitSuccess(true);
 
-      // Invalidate cache for products list to reflect the new product
-      mutate(key => typeof key === 'string' && key.startsWith('products/list'));
+      // Invalidate products cache to reflect the new product
+      await invalidateProductsCache();
 
       // Redirect after successful creation
       setTimeout(() => {

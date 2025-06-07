@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
 import { deleteFetcher, getFetcher, postFetcher, putFetcher, postMultipartFetcher, putMultipartFetcher } from "../../fetcher";
 import { ListProductsRequest } from "../../types";
@@ -19,6 +19,24 @@ export function buildQueryParams(params: Record<string, unknown>): string {
 
   return queryParams.toString();
 }
+
+// Helper function to invalidate products cache
+export const invalidateProductsCache = async () => {
+  try {
+    // Invalidate all products list cache entries (with any query parameters)
+    await mutate(key => typeof key === 'string' && key.startsWith('products/list'));
+
+    // Also invalidate the old useProducts hook cache entries for compatibility
+    await mutate(key => typeof key === 'string' && key.startsWith('products/list?'));
+
+    // Force immediate revalidation of all products-related queries
+    await mutate(key => typeof key === 'string' && key.includes('products/list'), undefined, { revalidate: true });
+
+    console.log('Products cache invalidated successfully');
+  } catch (error) {
+    console.error('Error invalidating products cache:', error);
+  }
+};
 
 
 export const useProducts = (params: Partial<ListProductsRequest> = {}, isReady: boolean = true) => {

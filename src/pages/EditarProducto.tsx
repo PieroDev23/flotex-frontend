@@ -3,19 +3,24 @@ import { useNavigate, useParams } from "react-router";
 import { useState } from "react";
 import { mutate } from "swr";
 import { ProductForm } from "../components/products/ProductForm";
-import { useCategories, useGetProduct, useUpdateProduct } from "../hooks/api";
+import { useCategories, useGetProduct, useUpdateProduct, useDeleteProduct, invalidateProductsCache } from "../hooks/api";
+import { useConfirmation } from "../hooks/useConfirmation";
 
 export default () => {
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
   const { data: categories = [] } = useCategories();
+  const { confirm, ConfirmationDialog } = useConfirmation();
   const { data: product, isLoading: isLoadingProduct, error: productError } = useGetProduct(
     parseInt(productId || "0"),
     !!productId
   );
   const updateProductMutation = useUpdateProduct(parseInt(productId || "0"));
+  const deleteProductMutation = useDeleteProduct(parseInt(productId || "0"));
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
@@ -48,11 +53,11 @@ export default () => {
       await updateProductMutation.trigger(data);
       setSubmitSuccess(true);
 
-      // Invalidate cache for products list to reflect the update
-      mutate(key => typeof key === 'string' && key.startsWith('products/list'));
+      // Invalidate products cache to reflect the update
+      await invalidateProductsCache();
 
       // Also invalidate the specific product cache
-      mutate(`products/${productId}`);
+      await mutate(`products/${productId}`);
 
       // Redirect after successful update
       setTimeout(() => {
@@ -68,6 +73,44 @@ export default () => {
       );
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!productId || !product) return;
+
+    // Confirm deletion with custom dialog
+    const confirmed = await confirm({
+      title: 'Eliminar Producto',
+      message: `¿Estás seguro de que deseas eliminar el producto "${product.name}"?\n\nEsta acción no se puede deshacer.`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      confirmColorScheme: 'red'
+    });
+
+    if (!confirmed) return;
+
+    try {
+      setIsDeleting(true);
+      setDeleteError(null);
+
+      await deleteProductMutation.trigger();
+
+      // Invalidate products cache to reflect the deletion
+      await invalidateProductsCache();
+
+      // Redirect immediately after successful deletion
+      navigate("/dashboard/productos");
+
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      setDeleteError(
+        error instanceof Error
+          ? error.message
+          : "Error al eliminar el producto. Por favor, intenta nuevamente."
+      );
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -147,6 +190,12 @@ export default () => {
           </Box>
         )}
 
+        {deleteError && (
+          <Box p={3} bg="red.50" borderRadius="md" border="1px solid" borderColor="red.200">
+            <Text color="red.600" fontSize="sm">{deleteError}</Text>
+          </Box>
+        )}
+
         {submitSuccess && (
           <Box p={3} bg="green.50" borderRadius="md" border="1px solid" borderColor="green.200">
             <Text color="green.600" fontSize="sm">¡Producto actualizado exitosamente! Redirigiendo...</Text>
@@ -160,8 +209,13 @@ export default () => {
           onSubmit={handleSubmit}
           isLoading={isSubmitting}
           submitButtonText="Actualizar Producto"
+          onDelete={handleDelete}
+          isDeleting={isDeleting}
         />
       </Stack>
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog />
     </Box>
   );
 };
