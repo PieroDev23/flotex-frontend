@@ -1,13 +1,12 @@
 import { Button, Menu } from "@chakra-ui/react";
 import React from "react";
 import { LuSettings2 } from "react-icons/lu";
+import { useProducts } from "../../hooks/api";
 import { CustomMenu } from "../common/Menu";
 
-
-
 const items = [
-  { label: "Más caros", value: "asc" },
-  { label: "Más baratos", value: "desc" }
+  { label: "Más baratos", value: "asc" },
+  { label: "Más caros", value: "desc" }
 ]
 
 export const PriceSortMenu: React.FC<{
@@ -17,6 +16,7 @@ export const PriceSortMenu: React.FC<{
   onChange,
   value
 }) => {
+    const { mutate } = useProducts();
     return (
       <CustomMenu trigger={
         <Button
@@ -33,7 +33,10 @@ export const PriceSortMenu: React.FC<{
           {value ? `Ordenando ${items.find(i => i.value === value)?.label}` : "Ordenar"}
         </Button>
       }>
-        <Menu.RadioItemGroup value={value} onValueChange={e => onChange(e.value)}>
+        <Menu.RadioItemGroup value={value} onValueChange={e => {
+          onChange(e.value);
+          mutate();
+        }}>
           <Menu.ItemGroupLabel>
             Ordenar por precio
           </Menu.ItemGroupLabel>

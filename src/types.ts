@@ -26,4 +26,28 @@ export const categorySchema = z.object({
 export type Product = z.infer<typeof productSchema>;
 export type Category = z.infer<typeof categorySchema>;
 
+// Search and filter types
+export interface ProductSearchParams {
+  categoryId?: string | null;
+  search?: string | null;
+  stockStatus?: string | null;
+}
 
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
+export type StockStatus = "available" | "out_of_stock" | "";
+
+// API parameter types based on the schema you provided
+export const listProductsRequestSchema = z.object({
+  name: z.string(),
+  id: z.number(),
+  categoryId: z.string(),
+  createdAt: z.string().date(),
+  sku: z.string(),
+  priceSort: z.enum(["asc", "desc"])
+}).partial();
+
+export type ListProductsRequest = z.infer<typeof listProductsRequestSchema>;

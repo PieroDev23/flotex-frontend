@@ -17,6 +17,7 @@ export type User = {
 type AuthContextValues = {
   user: User | null;
   isMutating: boolean;
+  isLoading: boolean;
   onLogout: () => void;
   refreshUser: () => void;
 }
@@ -46,7 +47,8 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
       user,
       onLogout,
       refreshUser,
-      isMutating
+      isMutating,
+      isLoading: rest.isLoading
     }}>
       {children}
     </AuthContext.Provider>

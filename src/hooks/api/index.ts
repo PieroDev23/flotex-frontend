@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import { deleteFetcher, getFetcher, postFetcher } from "../../fetcher";
+import { deleteFetcher, getFetcher, postFetcher, putFetcher, postMultipartFetcher, putMultipartFetcher } from "../../fetcher";
+import { ListProductsRequest } from "../../types";
 
 export function buildQueryParams(params: Record<string, unknown>): string {
   const queryParams = new URLSearchParams();
@@ -20,9 +21,7 @@ export function buildQueryParams(params: Record<string, unknown>): string {
 }
 
 
-export const useProducts = (params: { 
-  categoryId?: string | null
-} = {}, isReady: boolean = true) => {
+export const useProducts = (params: Partial<ListProductsRequest> = {}, isReady: boolean = true) => {
   return useSWR(isReady ? `products/list?${buildQueryParams(params)}` : null, getFetcher);
 }
 
@@ -50,7 +49,7 @@ export const useRegister = () => {
 }
 
 export const useUser = () => {
-  return useSWR(`users/`, getFetcher);
+  return useSWR(`users/me`, getFetcher);
 }
 
 export const useLogout = () => {
@@ -62,5 +61,84 @@ export const useAddress = () => {
     createAddress: () => useSWRMutation("addresses/", postFetcher),
     getAddresses: (isReady: boolean) => useSWR(isReady ? "addresses/list" : null, getFetcher)
   }
+}
+
+// Nuevos hooks para usuarios
+export const useUsersList = (params: {
+  role?: string | null,
+  active?: string | null,
+  search?: string | null,
+} = {}) => {
+  return useSWR(`users/list?${buildQueryParams(params)}`, getFetcher);
+}
+
+export const useUpdateUser = (userId: number) => {
+  return useSWRMutation("users", (url, { arg }: { arg: Record<string, unknown> }) => {
+    return putFetcher(url, {
+      arg: {
+        userId,
+        fields: arg
+      }
+    });
+  });
+}
+
+export const useDeleteUser = (userId: number) => {
+  return useSWRMutation(`users/${userId}`, deleteFetcher);
+}
+
+export const useGetUser = (userId: number, isReady: boolean = true) => {
+  return useSWR(isReady ? `users/${userId}` : null, getFetcher);
+}
+
+// Product management hooks
+interface ProductsListParams {
+  categoryId?: string | null;
+  name?: string | null;
+  search?: string | null;
+  sku?: string | null;
+  priceSort?: "asc" | "desc" | null;
+}
+
+export const useProductsList = (params: ProductsListParams = {}) => {
+  // Filter out null values and convert to API format
+  const apiParams = Object.fromEntries(
+    Object.entries(params).filter(([_, value]) => value !== null && value !== undefined)
+  );
+
+  return useSWR(`products/list?${buildQueryParams(apiParams)}`, getFetcher);
+}
+
+export const useUpdateProduct = (productId: number) => {
+  return useSWRMutation("products", (url, { arg }: { arg: Record<string, unknown> }) => {
+    return putFetcher(url, {
+      arg: {
+        productId,
+        fields: arg
+      }
+    });
+  });
+}
+
+export const useDeleteProduct = (productId: number) => {
+  return useSWRMutation(`products/${productId}`, deleteFetcher);
+}
+
+export const useCreateProduct = () => {
+  return useSWRMutation("products", postFetcher);
+}
+
+// Hook for creating products with multipart form data (for future use)
+export const useCreateProductMultipart = () => {
+  return useSWRMutation("products/upload", postMultipartFetcher);
+}
+
+// Hook for updating products with multipart form data (for future use)
+export const useUpdateProductMultipart = (productId: number) => {
+  return useSWRMutation(`products/${productId}/upload`, putMultipartFetcher);
+}
+
+export const useGetProduct = (productId: number, isReady: boolean = true) => {
+  return useSWR(isReady ? `products/${productId}` : null, getFetcher);
 }
 

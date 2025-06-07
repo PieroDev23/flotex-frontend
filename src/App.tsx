@@ -1,17 +1,24 @@
-import { Route, Routes } from 'react-router';
+import { Routes, Route } from 'react-router';
 import { WebLayout } from './layouts/WebLayout';
-
+import { CheckoutProvider } from './context/CheckoutContext';
+import { DashboardLayout } from './layouts/DashboardLayout';
+import Cart from "./pages/Cart";
+import Checkout from './pages/Checkout';
+import Faq from './pages/Faq';
 import Home from './pages/Home';
+import HomeDashboard from './pages/HomeDashboard';
+import Login from "./pages/Login";
+import Metrics from "./pages/Metrics";
+import OrderReview from './pages/OrderReview';
+import PrivacyPolicies from './pages/PrivacyPolicies';
+import Productos from './pages/Productos';
+import CrearProducto from './pages/CrearProducto';
+import EditarProducto from './pages/EditarProducto';
+import Register from "./pages/Register";
 import Shop from './pages/Shop';
 import SingleProduct from './pages/SingleProduct';
-import Checkout from './pages/Checkout';
-import OrderReview from './pages/OrderReview';
-import Faq from './pages/Faq';
-import PrivacyPolicies from './pages/PrivacyPolicies';
-import Cart from "./pages/Cart";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import { CheckoutProvider } from './context/CheckoutContext';
+import Usuarios from './pages/Usuarios';
+import UserFrom from './pages/UserFrom';
 
 function App() {
   return (
@@ -32,6 +39,16 @@ function App() {
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path='/dashboard' element={<DashboardLayout />}>
+        <Route path="/dashboard/" index element={<HomeDashboard />} />
+        <Route path="/dashboard/usuarios" element={<Usuarios />} />
+        <Route path="/dashboard/usuarios/editar/:id" element={<UserFrom />} />
+        <Route path="/dashboard/usuarios/crear" element={<UserFrom />} />
+        <Route path="/dashboard/productos" element={<Productos />} />
+        <Route path="/dashboard/productos/crear" element={<CrearProducto />} />
+        <Route path="/dashboard/productos/editar/:productId" element={<EditarProducto />} />
+        <Route path="/dashboard/metricas" element={<Metrics />} />
+      </Route>
     </Routes>
   )
 }

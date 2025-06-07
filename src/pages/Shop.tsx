@@ -8,10 +8,12 @@ export default () => {
   const [searchParams] = useSearchParams();
   const params = {
     categoryId: searchParams.get("category") || "",
-    name: searchParams.get("name") || ""
-  };
+    name: searchParams.get("name") || "",
+    priceSort: searchParams.get("priceSort") || ""
+  }
 
   const { data: products, isLoading } = useProducts(params);
+
   return (
     <PageLayout title="Shop" showToolbar>
       <Stack gap={4}>

@@ -1,16 +1,18 @@
-import { Button, For, Menu, useCheckboxGroup } from "@chakra-ui/react"
+import { Button, Menu } from "@chakra-ui/react"
+import React from "react"
 import { LuList } from "react-icons/lu"
-import { useCategories } from "../../hooks/api"
+import { useCategories, useProducts } from "../../hooks/api"
 import { Category } from "../../types"
 import { CustomMenu } from "../common/Menu"
-import React from "react"
 
 
 
 export const CategoriesMenu: React.FC<{
-  group: ReturnType<typeof useCheckboxGroup>;
-}> = ({ group }) => {
+  onChange: (value: string) => void;
+  value: string;
+}> = ({ value, onChange }) => {
   const { data: categories } = useCategories();
+  const { mutate } = useProducts();
   return (
     <CustomMenu trigger={
       <Button
@@ -24,26 +26,23 @@ export const CategoriesMenu: React.FC<{
         }}
       >
         <LuList />
-        {`Listar ${group.value.length > 0 ? `(${group.value.length})` : ""}`}
+        {value ? `Mostrando ${categories?.find((c: Category) => c.id === value)?.name}` : "listar"}
       </Button>
     }>
-      <Menu.ItemGroup>
-        <Menu.ItemGroupLabel>Listar por Categorías</Menu.ItemGroupLabel>
-        <For each={categories}>
-          {(categorie: Category) => (
-            <Menu.CheckboxItem
-              onCheckedChange={_ => group.toggleValue(categorie.id)}
-              checked={group.isChecked(categorie.id)}
-              key={categorie.id}
-              value={categorie.id}
-              textTransform="capitalize"
-            >
-              {categorie.name}
-              <Menu.ItemIndicator />
-            </Menu.CheckboxItem>
-          )}
-        </For>
-      </Menu.ItemGroup>
+      <Menu.RadioItemGroup value={value} onValueChange={e => {
+        onChange(e.value)
+        mutate();
+      }}>
+        <Menu.ItemGroupLabel>
+          Categorías
+        </Menu.ItemGroupLabel>
+        {categories?.map((c: Category) => (
+          <Menu.RadioItem key={c.id} value={c.id}>
+            {c.name}
+            <Menu.ItemIndicator />
+          </Menu.RadioItem>
+        ))}
+      </Menu.RadioItemGroup>
     </CustomMenu>
   )
 }

@@ -141,7 +141,7 @@ export const ActionsMenu: React.FC = () => {
 
   return (
     <Flex align="center" gap="1.5">
-      <Link to="/login">
+      <Link to={user ? (user.role === "ADMIN" ? "/dashboard" : "/login") : "/login"}>
         <IconButton bg="transparent">
           <LuUser />
         </IconButton>

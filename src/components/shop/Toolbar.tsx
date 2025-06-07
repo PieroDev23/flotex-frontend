@@ -1,18 +1,21 @@
-import { Button, Container, Flex, useCheckboxGroup } from "@chakra-ui/react";
+import { Button, Container, Flex } from "@chakra-ui/react";
 import React from "react";
 import { LuListRestart } from "react-icons/lu";
 import { CategoriesMenu } from "./CategoriesMenu";
 import { PriceSortMenu } from "./PriceMenu";
 import { SearchBar } from "./SearchBar";
+import { useSearchParams } from "react-router";
 
 export const Toolbar: React.FC = () => {
-
-  const [priceSort, setPriceSort] = React.useState("");
-  const group = useCheckboxGroup({ defaultValue: [] });
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const onResetFilters = () => {
-    setPriceSort("");
-    group.setValue([]);
+    setSearchParams(prev => {
+      prev.delete("priceSort");
+      prev.delete("category");
+      prev.delete("name");
+      return prev
+    });
   }
 
   return (
@@ -20,8 +23,18 @@ export const Toolbar: React.FC = () => {
       <Container as={Flex} alignItems="center" justifyContent="space-between" gap="3">
         <SearchBar />
         <Flex>
-          <PriceSortMenu value={priceSort} onChange={setPriceSort} />
-          <CategoriesMenu group={group} />
+          <PriceSortMenu value={searchParams.get("priceSort") || ""} onChange={(value) => {
+            setSearchParams(prev => {
+              prev.set("priceSort", value);
+              return prev;
+            });
+          }} />
+          <CategoriesMenu value={searchParams.get("category") || ""} onChange={(value) => {
+            setSearchParams(prev => {
+              prev.set("category", value);
+              return prev;
+            });
+          }} />
           <Button variant="ghost" _hover={{
             bgColor: "brand.primary",
             color: "white"
